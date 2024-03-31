@@ -1,4 +1,4 @@
-function simulatedGains = SimulatedGainArray(endTime)
+function simulatedGains = SimulatedGain(endTime)
     % Array of PumpPower_W_ values
     pumpPowers = [7.81, 3699.22, 4714.84, 6375.00, 8289.06, 9285.16, 10222.66, 11218.75, 12214.84, 13113.28, 14109.38, 15105.47];
     
