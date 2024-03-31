@@ -1,4 +1,4 @@
-function simulatedGains = SimulatedGain(endTime, variedValName, variedValValue)
+function simulatedGains = SimulatedGain(endTime, variedVarName, variedVarValue)
     if nargin > 1 % Check if more than two input arguments are passed
     end
     % Array of PumpPower_W_ values
