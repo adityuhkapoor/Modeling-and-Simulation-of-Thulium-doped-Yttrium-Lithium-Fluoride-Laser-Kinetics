@@ -1,7 +1,7 @@
-function SSGain = SSGainvsEndTimeandIp(Ip, endTime)
+function SSGain = SSGainvsEndTimeandIp(Ip_W, endTime)
     % Define constants as global variables
     global kcr ketu1 ketu2 tau2 tau3 tau4 ndop Ap Ab sigmaemission sigmaabsorption sigmapabs lambdapump h c beta43 beta42 beta32 beta41 beta31 L f21 f14 f15 f11 f42 f41 Ipsat Ip_in;
-    Ip_in=Ip;
+    Ip_in=Ip_W;
     % Initialize constants
     kcr = 6.85e-19;
     ketu1 = 2.1e-21;
