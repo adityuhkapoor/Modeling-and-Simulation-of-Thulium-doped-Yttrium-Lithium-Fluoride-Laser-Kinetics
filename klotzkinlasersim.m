@@ -1,7 +1,11 @@
-function SSGain = SSGainvsEndTimeandIp(Ip_W, endTime)
+function SSGain = SSGainvsEndTimeandIp(Ip_W, endTime, variedVarName, variedVarValue)
     % Define constants as global variables
     global kcr ketu1 ketu2 tau2 tau3 tau4 ndop Ap Ab sigmaemission sigmaabsorption sigmapabs lambdapump h c beta43 beta42 beta32 beta41 beta31 L f21 f14 f15 f11 f42 f41 Ipsat Ip_in;
-    Ip_in=Ip_W;
+    
+    
+    
+    Ip_in = Ip_W;
+    % Initialize constants
     % Initialize constants
     kcr = 6.85e-19;
     ketu1 = 2.1e-21;
@@ -31,7 +35,24 @@ function SSGain = SSGainvsEndTimeandIp(Ip_W, endTime)
     f42 = 0.168;
     f41 = 0.190;
     Ipsat = 1.159e4;
-
+    
+    % Check if variedVarName and variedVarValue are provided
+    if nargin > 2 % Check if more than two input arguments are passed
+        % Check if the varied variable name and value are not 'null'
+        if ~strcmp(variedVarName, "null") && ~strcmp(variedVarValue, "null")
+            % List of constants that can be varied
+            validVarNames = {'kcr', 'ketu1', 'ketu2', 'tau2', 'tau3', 'tau4', 'ndop', 'Ap', 'Ab', 'sigmaemission', 'sigmaabsorption', 'sigmapabs', 'lambdapump', 'h', 'c', 'beta43', 'beta42', 'beta32', 'beta41', 'beta31', 'L', 'f21', 'f14', 'f15', 'f11', 'f42', 'f41', 'Ipsat'};
+            
+            % Check if the provided name is in the list of valid variable names
+            if ismember(variedVarName, validVarNames)
+                % Set the global variable to the provided value
+                eval([variedVarName, ' = variedVarValue;']);
+            else
+                error('Invalid variable name provided.');
+            end
+        end
+    end
+    
     % Time parameters
     STARTTIME = 0;
     STOPTIME = endTime;
