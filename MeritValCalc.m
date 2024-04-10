@@ -4,7 +4,7 @@ function efficientMeritValueCalc = MeritValCalc(variedVarValue)
     simulatedGains = [];
     differenceGains = [];
     squareDifferenceGains = [];
-    sum = 0;
+    sumOfSquares = 0;
     for i = 1:length(pumpPowers)
         gain = SSGainvsEndTimeandIp(pumpPowers(i), 15e-3, 'tau2', variedVarValue); % Assuming simulatedGainFunction is your function
         simulatedGains = [simulatedGains, gain]; % Append the result to simulatedGains
@@ -19,7 +19,7 @@ function efficientMeritValueCalc = MeritValCalc(variedVarValue)
     for k = 1:length(differenceGains)
         squareDifference = differenceGains(k) * differenceGains(k);
         squareDifferenceGains = [squareDifferenceGains, squareDifference];
-        sum = sum + squareDifference;
+        sumOfSquares = sumOfSquares + squareDifference;
     end
-    disp(sum)
+    disp(sumOfSquares)
 end
