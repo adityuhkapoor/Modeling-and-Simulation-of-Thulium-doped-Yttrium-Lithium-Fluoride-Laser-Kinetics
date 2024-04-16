@@ -21,5 +21,5 @@ function efficientMeritValueCalc = MeritValCalc(variedVarValue)
         squareDifferenceGains = [squareDifferenceGains, squareDifference];
         sumOfSquares = sumOfSquares + squareDifference;
     end
-    disp(sumOfSquares)
+    efficientMeritValueCalc = sumOfSquares
 end
