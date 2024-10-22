@@ -1,7 +1,7 @@
-# LaserDynamicsSimulator
+# Modeling and Simulation of Thulium-doped Yttrium Lithium Fluoride Laser Kinetics
 
 ## Abstract
-This repository contains the MATLAB simulation code for a four-level Thulium-doped Yttrium Lithium Fluoride (Tm:YLF) laser kinetics model. The primary goal is to adjust model parameters and simulation works with a set of first-order differential equations representing the rate dynamics of the laser system.
+This repository contains the MATLAB simulation code for a four-level Thulium-doped Yttrium Lithium Fluoride (let's just refer to them as Thulium lasers for short) laser kinetics model. The primary goal is to adjust model parameters and simulation works with a set of first-order differential equations representing the rate dynamics of the laser system.
 
 ## Table of Contents
 - Introduction
@@ -12,7 +12,7 @@ This repository contains the MATLAB simulation code for a four-level Thulium-dop
 - Acknowledgements
 
 ## Introduction
-Thulium-doped Yttrium Lithium Fluoride lasers (let's just refer to them as Thulium lasers for short) are significant in various applications due to their emission in the 2 μm region, which is useful for medical, military, and scientific applications. Understanding the kinetics of these lasers is crucial for optimizing their performance. This project aims to simulate the laser kinetics to match experimental observations and gain deeper insights into the underlying physical processes.
+Thulium-doped Yttrium Lithium Fluoride lasers are significant in various applications due to their emission in the 2 μm region, which is useful for medical, military, and scientific applications. Understanding the kinetics of these lasers is crucial for optimizing their performance. This project aims to simulate the laser kinetics to match experimental observations and gain deeper insights into the underlying physical processes.
 
 ## Objectives
 - Develop a kinetic model of the Thulium laser using first-order differential equations.
