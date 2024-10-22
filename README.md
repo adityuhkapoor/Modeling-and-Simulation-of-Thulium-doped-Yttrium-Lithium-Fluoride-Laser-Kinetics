@@ -9,8 +9,6 @@ This repository contains the MATLAB simulation code for a four-level Thulium-dop
 - Methodology
 - Results
 - Conclusion
-- Future Work
-- References
 - Acknowledgements
 
 ## Introduction
@@ -43,11 +41,6 @@ Thulium-doped Yttrium Lithium Fluoride lasers (let's just refer to them as Thuli
 
 ## Conclusion
 The simulation successfully models the kinetics of a Thulium laser and provides insights into the population dynamics. By adjusting the model parameters, the simulated gains align closely with experimental data, validating the effectiveness of the kinetic model. This work contributes to a better understanding of Thulium lasers and can aid in their optimization for practical applications.
-
-## Future Work
-Inclusion of Thermal Effects: Extend the model to account for temperature variations and thermal lensing effects.
-Spatial Effects: Incorporate spatial variations in doping concentration and pump intensity.
-Higher-Order Processes: Explore the impact of higher-order nonlinear effects on laser performance.
 
 ## Acknowledgements
 I would like to thank my supervisor, Dr. David Klotzkin, for guidance throughout this project. 
