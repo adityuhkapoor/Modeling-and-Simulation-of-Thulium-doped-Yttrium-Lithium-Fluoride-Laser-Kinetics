@@ -28,7 +28,7 @@ Thulium-doped Yttrium Lithium Fluoride lasers are significant in various applica
 
 ## Key Equations
 - Rate Equations: Defined for populations n_1, n_2, n_3, n_4, with parameters like pump rate, R_e, decay rates, and cross-relaxation terms.
-- Gain Calculation: Small-signal gain calculated using g_0 =
+- Gain Calculation: Small-signal gain calculated using g_0 = σ(n_3 - n_2)
 
 ## Tools and Libraries
 - MATLAB R2021a for simulation and data analysis.
