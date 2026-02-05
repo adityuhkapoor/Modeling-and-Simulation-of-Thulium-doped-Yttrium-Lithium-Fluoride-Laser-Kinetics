@@ -1,3 +1,8 @@
+% DEPRECATED - This file is retained for historical reference only.
+% It has been superseded by the modular code in src/.
+% Do not use this file for new work.
+% See legacy/README.md for details on what changed and why.
+%
 function SSGainNewConstants = SSGainvsEndTimeandIpNewConstants(Ip_W, endTime, variedVarName, variedVarValue)
     % Define constants as global variables
     global kcr ketu1 ketu2 tau2 tau3 tau4 ndop Ap Ab sigmaemission sigmaabsorption sigmapabs lambdapump h c beta43 beta42 beta32 beta41 beta31 L f21 f14 f15 f11 f42 f41 Ipsat Ip_in;

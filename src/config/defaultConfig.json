@@ -1,0 +1,33 @@
+{
+    "constants": {
+        "kcr": 6.85e-19,
+        "ketu1": 2.1e-21,
+        "ketu2": 2.1e-21,
+        "tau2": 16.3e-3,
+        "tau3": 2.258e-3,
+        "tau4": 56.63e-6,
+        "ndop": 8.3e20,
+        "sigmaEmission": 4e-21,
+        "sigmaAbsorption": 9e-22,
+        "sigmaPumpAbs": 6.978e-21,
+        "lambdaPump": 7.913e-5,
+        "h": 6.626e-34,
+        "c": 3e8,
+        "beta43": 0.100,
+        "beta42": 0.030,
+        "beta32": 0.030,
+        "L": 3.5
+    },
+    "config": {
+        "endTime": 15e-3,
+        "solver": {
+            "relTol": 1e-6,
+            "absTol": 1e-9
+        },
+        "logging": {
+            "level": "info",
+            "toFile": false,
+            "logFile": "simulation.log"
+        }
+    }
+}

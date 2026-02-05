@@ -1,3 +1,8 @@
+% DEPRECATED - This file is retained for historical reference only.
+% It has been superseded by the modular code in src/.
+% Do not use this file for new work.
+% See legacy/README.md for details on what changed and why.
+%
 function efficientMeritValueCalc = MeritValCalc(x)
     % Assuming x is an array with three elements [a, b, c]
     variedVarValue = x(1) * 1e-3; % Use the first element and multiply it by 10^-3 for the original purpose

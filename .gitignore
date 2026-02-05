@@ -1,0 +1,28 @@
+# MATLAB temporary files
+*.asv
+*.m~
+*.autosave
+
+# Generated figures
+*.fig
+
+# IDE
+.idea/
+*.iml
+
+# Python (unused venv)
+venv/
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build artifacts
+mex/
+codegen/
+slprj/

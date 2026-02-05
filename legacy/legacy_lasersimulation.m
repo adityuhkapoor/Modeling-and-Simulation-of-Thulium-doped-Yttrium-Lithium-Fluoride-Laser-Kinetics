@@ -1,3 +1,8 @@
+% DEPRECATED - This file is retained for historical reference only.
+% It has been superseded by the modular code in src/.
+% Do not use this file for new work.
+% See legacy/README.md for details on what changed and why.
+%
 % Define constants
 kcr = 6.85e-19;
 ketu1 = 2.1e-21;

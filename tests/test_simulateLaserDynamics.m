@@ -1,46 +1,66 @@
-% test_simulateLaserDynamics.m
+% test_simulateLaserDynamics.m - Unit tests for the simulateLaserDynamics function.
 
 function tests = test_simulateLaserDynamics
-tests = functiontests(localfunctions);
+    tests = functiontests(localfunctions);
 end
 
-function testSimulationOutput(testCase)
-% Test that simulateLaserDynamics produces expected population sizes
-% for a known input.
+function setupOnce(testCase)
+    addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src', 'functions'));
+    addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src', 'config'));
+    addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src', 'logging'));
+    addpath(fullfile(fileparts(mfilename('fullpath')), 'fixtures'));
+    Logger.configure('error');
+    testCase.TestData.constants = getTestConstants();
+end
 
-% Define constants
-constants = struct(...
-    'kcr', 6.85e-19, ...
-    'ketu1', 2.1e-21, ...
-    'ketu2', 2.1e-21, ...
-    'tau2', 16.3e-3, ...
-    'tau3', 2.258e-3, ...
-    'tau4', 56.63e-6, ...
-    'ndop', 8.3e20, ...
-    'sigmaEmission', 4e-21, ...
-    'sigmaAbsorption', 9e-22, ...
-    'sigmaPumpAbs', 6.978e-21, ...
-    'lambdaPump', 7.913e-5, ...
-    'h', 6.626e-34, ...
-    'c', 3e8, ...
-    'beta43', 0.100, ...
-    'beta42', 0.030, ...
-    'beta32', 0.030, ...
-    'L', 3.5 ...
-);
+function testOutputShape(testCase)
+% Output should be a 1x4 row vector
+    c = testCase.TestData.constants;
+    n_pop = simulateLaserDynamics(10000, 15e-3, c);
+    verifySize(testCase, n_pop, [1, 4]);
+end
 
-% Set simulation parameters
-Ip_W = 10000; % Input pump power in Watts
-endTime = 15e-3; % 15 ms
+function testPopulationConservation(testCase)
+% Total population should equal ndop (conservation law)
+    c = testCase.TestData.constants;
+    n_pop = simulateLaserDynamics(10000, 15e-3, c);
+    verifyEqual(testCase, sum(n_pop), c.ndop, 'RelTol', 1e-4);
+end
 
-% Expected output (this would be based on prior calculations)
-% For the purpose of this test, we'll assume some expected population values.
-% In a real test, these should be replaced with actual expected results.
-expected_n_populations = [8.2e20, 5.0e18, 3.0e18, 2.0e18];
+function testNonNegativePopulations(testCase)
+% All populations must be >= 0
+    c = testCase.TestData.constants;
+    n_pop = simulateLaserDynamics(10000, 15e-3, c);
+    verifyGreaterThanOrEqual(testCase, n_pop, zeros(1, 4));
+end
 
-% Run simulation
-n_populations = simulateLaserDynamics(Ip_W, endTime, constants);
+function testZeroPumpPower(testCase)
+% With no pump, populations should remain at initial conditions
+    c = testCase.TestData.constants;
+    n_pop = simulateLaserDynamics(0, 15e-3, c);
+    expectedPop = [c.ndop, 0, 0, 0];
+    verifyEqual(testCase, n_pop, expectedPop, 'AbsTol', 1e10);
+end
 
-% Verify that the simulated populations are within acceptable tolerance
-verifyEqual(testCase, n_populations, expected_n_populations, 'AbsTol', 1e17);
+function testShortTime(testCase)
+% Very short simulation: populations should barely change from initial
+    c = testCase.TestData.constants;
+    n_pop = simulateLaserDynamics(10000, 1e-9, c);
+    % n1 should still be very close to ndop
+    verifyEqual(testCase, n_pop(1), c.ndop, 'RelTol', 1e-3);
+end
+
+function testPumpingIncreasesUpperLevels(testCase)
+% With pump on, n2 should be positive (cross-relaxation populates it)
+    c = testCase.TestData.constants;
+    n_pop = simulateLaserDynamics(10000, 15e-3, c);
+    verifyGreaterThan(testCase, n_pop(2), 0);
+end
+
+function testHigherPumpGivesMoreInversion(testCase)
+% Higher pump power should produce larger n2 population
+    c = testCase.TestData.constants;
+    n_low  = simulateLaserDynamics(1000,  15e-3, c);
+    n_high = simulateLaserDynamics(15000, 15e-3, c);
+    verifyGreaterThan(testCase, n_high(2), n_low(2));
 end

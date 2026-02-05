@@ -1,3 +1,8 @@
+% DEPRECATED - This file is retained for historical reference only.
+% It has been superseded by the modular code in src/.
+% Do not use this file for new work.
+% See legacy/README.md for details on what changed and why.
+%
 function efficientMeritValueCalc = MeritValCalc(variedVarValue)
     pumpPowers = [7.81, 3699.22, 4714.84, 6375.00, 8289.06, 9285.16, 10222.66, 11218.75, 12214.84, 13113.28, 14109.38, 15105.47];
     experimentalGain = [0.15695, 0.36433, 0.45558, 0.64403, 0.82906, 1.00532, 1.09950, 1.35764, 1.65112, 1.91578, 2.34224, 2.67910];

@@ -1,53 +1,84 @@
-% main.m
+% main.m - Entry point for the Tm:YLF laser dynamics simulation.
+%
+% Loads experimental data, runs the simulation for each pump power,
+% compares simulated gains against experimental measurements, and
+% generates visualization plots.
 
 clear; close all; clc;
 
-% Add necessary paths
+% Add paths
+addpath('config');
 addpath('functions');
+addpath('logging');
+addpath('visualization');
+
+% Load configuration and constants
+constants = getDefaultConstants();
+config    = getSimulationConfig();
+
+% Initialize logger
+Logger.configure(config.logging.level, config.logging.toFile, config.logging.logFile);
+Logger.info('LaserDynamicsSimulator started.');
 
 % Load experimental data
-data = readtable('../data/Pump_Data.xlsx', 'Sheet', '15ms_Pump_Data');
-pumpPowers_W = data.PumpPower_W_;
-experimentalGain = data.Single_PassGain;
-
-% Simulation parameters
-endTime = 15e-3; % 15 ms
-
-% Define initial constants
-constants = struct(...
-    'kcr', 6.85e-19, ...
-    'ketu1', 2.1e-21, ...
-    'ketu2', 2.1e-21, ...
-    'tau2', 16.3e-3, ...
-    'tau3', 2.258e-3, ...
-    'tau4', 56.63e-6, ...
-    'ndop', 8.3e20, ...
-    'sigmaEmission', 4e-21, ...
-    'sigmaAbsorption', 9e-22, ...
-    'sigmaPumpAbs', 6.978e-21, ...
-    'lambdaPump', 7.913e-5, ...
-    'h', 6.626e-34, ...
-    'c', 3e8, ...
-    'beta43', 0.100, ...
-    'beta42', 0.030, ...
-    'beta32', 0.030, ...
-    'L', 3.5 ...
-);
-
-% Simulate gains
-simulatedGains = zeros(length(pumpPowers_W), 1);
-for i = 1:length(pumpPowers_W)
-    n_populations = simulateLaserDynamics(pumpPowers_W(i), endTime, constants);
-    simulatedGains(i) = calculateGain(n_populations, constants);
+try
+    data = readtable(config.dataFile, 'Sheet', config.sheetName);
+catch ME
+    Logger.error('Failed to load data file "%s" (sheet: %s): %s', ...
+        config.dataFile, config.sheetName, ME.message);
+    error('main:dataLoadFailed', ...
+        'Cannot read "%s" (sheet: %s): %s', ...
+        config.dataFile, config.sheetName, ME.message);
 end
 
-% Plot results
-figure;
-plot(pumpPowers_W, simulatedGains, '-o', 'DisplayName', 'Simulated Gains');
-hold on;
-plot(pumpPowers_W, experimentalGain, '-x', 'DisplayName', 'Experimental Gains');
-xlabel('Input Power (W)');
-ylabel('Gain');
-title('Comparison of Experimental and Simulated Gains');
-legend('Location', 'Best');
-grid on;
+% Validate expected columns
+requiredCols = {'PumpPower_W_', 'Single_PassGain'};
+for i = 1:numel(requiredCols)
+    if ~ismember(requiredCols{i}, data.Properties.VariableNames)
+        error('main:missingColumn', ...
+            'Data file missing required column: %s', requiredCols{i});
+    end
+end
+
+pumpPowers_W     = data.PumpPower_W_;
+experimentalGain = data.Single_PassGain;
+Logger.info('Loaded %d pump power data points from %s.', length(pumpPowers_W), config.dataFile);
+
+% Run simulation for each pump power
+simulatedGains = zeros(length(pumpPowers_W), 1);
+for i = 1:length(pumpPowers_W)
+    n_populations     = simulateLaserDynamics(pumpPowers_W(i), config.endTime, constants);
+    simulatedGains(i) = calculateGain(n_populations, constants);
+end
+Logger.info('Simulation complete for all %d pump powers.', length(pumpPowers_W));
+
+% --- Visualizations ---
+configurePlotDefaults();
+
+% 1. Gain comparison with residuals
+plotGainComparison(pumpPowers_W, simulatedGains, experimentalGain);
+
+% 2. Population dynamics for the highest pump power
+[t, n, diag] = simulateLaserDynamicsFull(pumpPowers_W(end), config.endTime, constants);
+plotPopulationDynamics(t, n, constants);
+
+% --- Optional analyses (uncomment to run) ---
+
+% 3. Convergence analysis
+% plotConvergenceAnalysis(pumpPowers_W(6), constants);
+
+% 4. Parameter sensitivity (example: sweep kcr)
+% kcrRange = linspace(0.5, 2.0, 8) * constants.kcr;
+% plotParameterSensitivity(pumpPowers_W, experimentalGain, constants, 'kcr', kcrRange);
+
+% --- Optional: Parameter Optimization ---
+% Uncomment to optimize parameters against experimental data.
+% Requires Optimization Toolbox.
+%
+% experimentalData = struct( ...
+%     'pumpPowers', pumpPowers_W, ...
+%     'gains',      experimentalGain, ...
+%     'endTime',    config.endTime ...
+% );
+% optimizedConstants = optimizeParameters(constants, experimentalData);
+% Logger.info('Optimization complete. Rerunning with optimized constants...');
