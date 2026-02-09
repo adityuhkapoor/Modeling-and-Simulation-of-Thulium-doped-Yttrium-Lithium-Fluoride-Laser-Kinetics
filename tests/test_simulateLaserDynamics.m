@@ -1,4 +1,4 @@
-% test_simulateLaserDynamics.m - Unit tests for the simulateLaserDynamics function.
+% test_simulateLaserDynamics.m - Unit tests for simulateLaserDynamics.
 
 function tests = test_simulateLaserDynamics
     tests = functiontests(localfunctions);
@@ -9,33 +9,28 @@ function setupOnce(testCase)
     addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src', 'config'));
     addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src', 'logging'));
     addpath(fullfile(fileparts(mfilename('fullpath')), 'fixtures'));
-    Logger.configure('error');
     testCase.TestData.constants = getTestConstants();
 end
 
 function testOutputShape(testCase)
-% Output should be a 1x4 row vector
     c = testCase.TestData.constants;
     n_pop = simulateLaserDynamics(10000, 15e-3, c);
     verifySize(testCase, n_pop, [1, 4]);
 end
 
 function testPopulationConservation(testCase)
-% Total population should equal ndop (conservation law)
     c = testCase.TestData.constants;
     n_pop = simulateLaserDynamics(10000, 15e-3, c);
     verifyEqual(testCase, sum(n_pop), c.ndop, 'RelTol', 1e-4);
 end
 
 function testNonNegativePopulations(testCase)
-% All populations must be >= 0
     c = testCase.TestData.constants;
     n_pop = simulateLaserDynamics(10000, 15e-3, c);
     verifyGreaterThanOrEqual(testCase, n_pop, zeros(1, 4));
 end
 
 function testZeroPumpPower(testCase)
-% With no pump, populations should remain at initial conditions
     c = testCase.TestData.constants;
     n_pop = simulateLaserDynamics(0, 15e-3, c);
     expectedPop = [c.ndop, 0, 0, 0];
@@ -43,22 +38,18 @@ function testZeroPumpPower(testCase)
 end
 
 function testShortTime(testCase)
-% Very short simulation: populations should barely change from initial
     c = testCase.TestData.constants;
     n_pop = simulateLaserDynamics(10000, 1e-9, c);
-    % n1 should still be very close to ndop
     verifyEqual(testCase, n_pop(1), c.ndop, 'RelTol', 1e-3);
 end
 
 function testPumpingIncreasesUpperLevels(testCase)
-% With pump on, n2 should be positive (cross-relaxation populates it)
     c = testCase.TestData.constants;
     n_pop = simulateLaserDynamics(10000, 15e-3, c);
     verifyGreaterThan(testCase, n_pop(2), 0);
 end
 
 function testHigherPumpGivesMoreInversion(testCase)
-% Higher pump power should produce larger n2 population
     c = testCase.TestData.constants;
     n_low  = simulateLaserDynamics(1000,  15e-3, c);
     n_high = simulateLaserDynamics(15000, 15e-3, c);

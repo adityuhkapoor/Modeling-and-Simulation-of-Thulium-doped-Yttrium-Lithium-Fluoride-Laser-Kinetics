@@ -1,4 +1,4 @@
-% test_integration.m - End-to-end integration tests for the full pipeline.
+% test_integration.m - End-to-end pipeline tests.
 
 function tests = test_integration
     tests = functiontests(localfunctions);
@@ -9,12 +9,10 @@ function setupOnce(testCase)
     addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src', 'config'));
     addpath(fullfile(fileparts(mfilename('fullpath')), '..', 'src', 'logging'));
     addpath(fullfile(fileparts(mfilename('fullpath')), 'fixtures'));
-    Logger.configure('error');
     testCase.TestData.constants = getTestConstants();
 end
 
 function testFullPipelineProducesFiniteGains(testCase)
-% Run simulation + gain calculation for representative pump powers.
     c = testCase.TestData.constants;
     pumpPowers = [100, 1000, 5000, 10000, 15000];
     gains = zeros(size(pumpPowers));
@@ -27,7 +25,6 @@ function testFullPipelineProducesFiniteGains(testCase)
 end
 
 function testGainMonotonicallyIncreases(testCase)
-% Gain should increase with pump power (for this system in the tested range).
     c = testCase.TestData.constants;
     pumpPowers = [500, 2000, 5000, 10000, 15000];
     gains = zeros(size(pumpPowers));
@@ -41,9 +38,8 @@ function testGainMonotonicallyIncreases(testCase)
 end
 
 function testFullSimulationDiagnostics(testCase)
-% simulateLaserDynamicsFull should return valid diagnostics.
     c = testCase.TestData.constants;
-    [t, n, diag] = simulateLaserDynamicsFull(10000, 15e-3, c);
+    [t, n, diag] = simulateLaserDynamics(10000, 15e-3, c);
     verifyGreaterThan(testCase, numel(t), 1);
     verifySize(testCase, n, [numel(t), 4]);
     verifyLessThan(testCase, diag.maxConservationError, 1e-4);
@@ -51,7 +47,6 @@ function testFullSimulationDiagnostics(testCase)
 end
 
 function testConfigModulesReturnValidStructs(testCase)
-% getDefaultConstants and getSimulationConfig should return complete structs.
     c = getDefaultConstants();
     cfg = getSimulationConfig();
     verifyTrue(testCase, isstruct(c));

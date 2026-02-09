@@ -1,25 +1,6 @@
 function fig = plotPopulationDynamics(t, n, constants, options)
-% plotPopulationDynamics Plots time-domain evolution of energy level populations.
-%
-% Creates a figure showing how all four population densities evolve over
-% time during the pump pulse.
-%
-% Inputs:
-%   t         - Time vector [Nx1] in seconds (from simulateLaserDynamicsFull).
-%   n         - Population matrix [Nx4], columns: [n1, n2, n3, n4] in cm^-3.
-%   constants - Constants struct (for ndop normalization).
-%   options   - (optional) Struct with display options:
-%     .normalize - Boolean, plot as fraction of ndop. Default: true.
-%     .logScale  - Boolean, use log scale for y-axis. Default: false.
-%     .title     - String, custom figure title.
-%     .savePath  - String, if provided, save figure to this path.
-%
-% Output:
-%   fig - Handle to the created figure.
-%
-% See also: simulateLaserDynamicsFull, configurePlotDefaults
+% plotPopulationDynamics Time evolution of energy level populations.
 
-    % Default options
     if nargin < 4, options = struct(); end
     if ~isfield(options, 'normalize'), options.normalize = true;  end
     if ~isfield(options, 'logScale'),  options.logScale  = false; end
@@ -50,11 +31,6 @@ function fig = plotPopulationDynamics(t, n, constants, options)
     title(options.title);
     legend('Location', 'east');
 
-    if options.logScale
-        set(gca, 'YScale', 'log');
-    end
-
-    if isfield(options, 'savePath')
-        saveas(fig, options.savePath);
-    end
+    if options.logScale, set(gca, 'YScale', 'log'); end
+    if isfield(options, 'savePath'), saveas(fig, options.savePath); end
 end
